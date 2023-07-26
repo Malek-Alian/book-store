@@ -1,24 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from "react-router-dom";
+import Welcome from "./components/Welcome";
+import Login from "./components/Login";
+import { useMediaQuery } from "@mui/material";
+import { createContext } from "react";
+export const AppContext = createContext()
 
 function App() {
+
+  const xs = useMediaQuery('(min-width:600px)')
+  const sm = useMediaQuery('(min-width:900px)')
+  const md = useMediaQuery('(min-width:1200px)')
+  const lg = useMediaQuery('(min-width:1500px)')
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppContext.Provider value={{ xs, sm, md, lg }}>
+      <Routes>
+        <Route path="/" element={<Welcome />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </AppContext.Provider>
   );
 }
 
