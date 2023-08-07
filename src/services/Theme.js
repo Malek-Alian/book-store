@@ -8,7 +8,7 @@ const Theme = createTheme({
             contrastText: '#ffffff',
         },
         secondary: {
-            main: '#f50057',
+            main: '#ff9b8a',
         },
         text: {
             primary: '#ffffff',
@@ -17,11 +17,12 @@ const Theme = createTheme({
         background: {
             default: '#020406',
             paper: '#0a101b',
-            item: 'rgba(13, 208, 179, 0.4)'
+            item: 'rgba(13, 208, 179, 0.1)'
         },
         error: {
             main: '#f44336',
         },
+        divider: 'rgba(255,255,255,0.12)',
     },
 })
 

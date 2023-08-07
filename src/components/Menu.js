@@ -1,11 +1,15 @@
-import { Box, IconButton, Fade } from "@mui/material"
-import { useContext, useState } from "react"
-import { AppContext } from "../App"
+import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import GridViewIcon from '@mui/icons-material/GridView';
 import HomeIcon from '@mui/icons-material/Home';
-import MenuIcon from '@mui/icons-material/Menu';
-import MenuItem from "./MenuItem";
 import LockPersonIcon from '@mui/icons-material/LockPerson';
+import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import { Box, Fade, IconButton } from "@mui/material";
+import { useContext, useState } from "react";
+import { AppContext } from "../App";
+import MenuItem from "./MenuItem";
 
 const Menu = () => {
 
@@ -16,6 +20,24 @@ const Menu = () => {
         { 'icon': <HomeIcon />, 'title': 'Shop' },
         { 'icon': <LockPersonIcon />, 'title': 'Admin' },
         { 'icon': <PersonIcon />, 'title': 'User' },
+    ]
+    const subMenuItems = [
+        [
+            { 'icon': <HomeIcon />, 'title': 'Shop' },
+            { 'icon': <LockPersonIcon />, 'title': 'Admin' },
+            { 'icon': <PersonIcon />, 'title': 'User' },
+        ],
+        [
+            { 'icon': <DashboardIcon />, 'title': 'Dashboard' },
+            { 'icon': <GridViewIcon />, 'title': 'Books Category' },
+            { 'icon': <CollectionsBookmarkIcon />, 'title': 'Author' },
+            { 'icon': <LibraryBooksIcon />, 'title': 'Books' },
+        ],
+        [
+            { 'icon': <HomeIcon />, 'title': 'Shop' },
+            { 'icon': <LockPersonIcon />, 'title': 'Admin' },
+            { 'icon': <PersonIcon />, 'title': 'User' },
+        ]
     ]
 
     const handleMenu = () => {
@@ -42,8 +64,8 @@ const Menu = () => {
                         </IconButton>
                     </Fade>}
             </Box>
-            <Box marginTop={!pageMenuOpen && 1.6} color={'gray'}>
-                {menuItems.map((item, index) => <MenuItem isSelected={selectedIndex === index} itemIndex={index} setSelectedIndex={setSelectedIndex} key={index} icon={item.icon} title={item.title} />)}
+            <Box marginTop={!pageMenuOpen && 3.6} color={'#b5b5be'}>
+                {menuItems.map((item, index) => <MenuItem subItems={subMenuItems[index]} isSelected={selectedIndex === index} itemIndex={index} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} key={index} icon={item.icon} title={item.title} />)}
             </Box>
         </Box>
     )

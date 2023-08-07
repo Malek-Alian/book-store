@@ -1,10 +1,6 @@
-import { useContext } from "react"
-import { AppContext } from "../App"
-import { Box, Button } from "@mui/material"
+import { Box, Button, Divider } from "@mui/material"
 
 const Home = () => {
-
-    const { pageMenuOpen } = useContext(AppContext)
 
     return (
         <>
@@ -13,8 +9,7 @@ const Home = () => {
                     <h2>Browse Books</h2>
                     <Button variant="contained">View All</Button>
                 </Box>
-                <hr />
-                <Box></Box>
+                <Divider />
             </Box>
         </>
     )

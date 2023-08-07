@@ -3,11 +3,13 @@ import { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { AppContext } from "../../App"
 import { request } from "../../api/Request"
+import { useNavigate } from "react-router-dom"
 
 const Login = () => {
 
     const { register, handleSubmit, formState: { errors }, setError } = useForm()
     const { setIsSigned, setCurrentUser, xs } = useContext(AppContext)
+    const navigate = useNavigate()
 
     const login = async (data) => {
         let result = await request('login', 'POST', data)
@@ -18,6 +20,7 @@ const Login = () => {
             }
         } else {
             setCurrentUser(result.data)
+            navigate('/home')
             setIsSigned(true)
         }
     }
