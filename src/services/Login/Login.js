@@ -19,6 +19,7 @@ const Login = () => {
                 setError('password', { message: 'Email or Password is not currect' })
             }
         } else {
+            localStorage.setItem('token', result.token)
             setCurrentUser(result.data)
             navigate('/home')
             setIsSigned(true)

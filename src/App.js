@@ -1,7 +1,7 @@
-import { Grid, ThemeProvider, useMediaQuery } from "@mui/material";
-import { createContext, useState } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
-import Home from "./components/Home";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Hidden, ThemeProvider, useMediaQuery } from "@mui/material";
+import { createContext, useEffect, useState } from "react";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import Home from "./pages/Home";
 import Menu from "./components/Menu";
 import TheAppBar from "./components/TheAppBar";
 import Books from "./pages/Books";
@@ -9,6 +9,8 @@ import Login from "./services/Login/Login";
 import Theme from "./services/Theme";
 import Welcome from "./services/Welcome/Welcome";
 import AddBook from "./pages/AddBook";
+import { request } from "./api/Request";
+import EditBook from "./components/EditBook";
 export const AppContext = createContext()
 
 function App() {
@@ -19,15 +21,49 @@ function App() {
   const [pageMenuOpen, setPageMenuOpen] = useState(true)
   const [hover, setHover] = useState(false)
   const [books, setBooks] = useState([])
+  const [sessionDialog, setSessionDialog] = useState(false)
 
   const xs = useMediaQuery('(min-width:600px)')
   const sm = useMediaQuery('(min-width:900px)')
   const md = useMediaQuery('(min-width:1200px)')
   const lg = useMediaQuery('(min-width:1500px)')
 
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const getUser = async () => {
+      let result = await request('checkUser', 'POST')
+      if (result.success) {
+        setCurrentUser(result.data)
+        setIsSigned(true)
+      } else if (result.status === 409) {
+        setSessionDialog(true)
+      } else {
+        navigate('/login', { replace: true })
+      }
+    }
+    getUser()
+  }, [])
+
+  const goToLogin = () => {
+    setSessionDialog(false)
+    navigate('/login', { replace: true })
+  }
+
   return (
     <AppContext.Provider value={{ xs, sm, md, lg, isSigned, setIsSigned, currentUser, setCurrentUser, pageMenuOpen, setPageMenuOpen, hover, setHover, books, setBooks }}>
       <ThemeProvider theme={Theme}>
+        {sessionDialog && <Box height={'100vh'} backgroundColor={'background.default'}>
+          <Dialog sx={{ textAlign: 'center' }} open={sessionDialog}>
+            <DialogContent>
+              <h2>Your session has been expired</h2>
+              <h2>Please login</h2>
+            </DialogContent>
+            <DialogActions sx={{ justifyContent: 'center' }}>
+              <Button onClick={() => { goToLogin() }} sx={{ marginY: 2, width: 300 }} variant="contained">Login</Button>
+            </DialogActions>
+          </Dialog>
+        </Box>}
         {isSigned ? <Grid sx={{ overflowX: 'hidden', '&::-webkit-scrollbar': { display: 'none' } }} container width={'100vw'} height={'100vh'} backgroundColor={'background.default'}>
           <Grid item xs={pageMenuOpen ? 2 : 0.5}><Menu /></Grid>
           <Grid item xs={pageMenuOpen ? 10 : 11.5}>
@@ -40,6 +76,7 @@ function App() {
                   <Route path="/home" element={<Home />} />
                   <Route path="/books" element={<Books />} />
                   <Route path="/books/add-book" element={<AddBook />} />
+                  <Route path="/books/edit-book" element={<EditBook />} />
                 </Routes>
               </Grid>
             </Grid>

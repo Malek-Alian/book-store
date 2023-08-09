@@ -1,31 +1,13 @@
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Box, Button, Divider, FormControl, MenuItem, Select, TextField, TextareaAutosize, Typography } from "@mui/material";
-import { useContext } from "react";
+import { Box, Button, Divider, FormControl, MenuItem, Select, TextField, TextareaAutosize, Typography } from "@mui/material"
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { AppContext } from "../App";
-import { fileRequest, request } from "../api/Request";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { useLocation } from "react-router-dom";
 
-const AddBook = () => {
+const EditBook = () => {
 
-    const { currentUser } = useContext(AppContext)
-    const navigate = useNavigate()
     const { register, handleSubmit, formState: { errors }, reset } = useForm()
+    const location = useLocation()
 
-    const addBook = async (data) => {
-        let formData = new FormData();
-        formData.append("bookImage", data.image[0]);
-        if (!data.PDF) {
-            data.PDF = ' '
-        }
-        if (!data.description) {
-            data.description = ' '
-        }
-        const result = await fileRequest(`upload/${currentUser._id}`, 'POST', formData)
-        await request('books/add-book', 'POST', { ...data, image: result.data._id })
-        reset()
-        navigate('/books', { replace: true })
-    }
     const handleFocus = (event) => {
         event.target.style.borderColor = "#0dd0b3";
         event.target.style.outline = "none";
@@ -37,10 +19,10 @@ const AddBook = () => {
     return (
         <Box width={'100%'} color={'white'} backgroundColor={'background.paper'} borderRadius={1}>
             <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} paddingX={3}>
-                <h2>Add Book</h2>
+                <h2>Edit Book</h2>
             </Box>
             <Divider />
-            <form onSubmit={handleSubmit(addBook)} style={{ display: 'flex', flexDirection: 'column', padding: 20 }}>
+            <form onSubmit={handleSubmit()} style={{ display: 'flex', flexDirection: 'column', padding: 20 }}>
                 <h4 style={{ marginTop: 0 }}>( {<Typography display={"inline"} color={'secondary.main'}>*</Typography>} ) Means the field is required</h4>
                 <label style={{ color: '#a2a4af', marginBottom: 10 }}>{<Typography display={"inline"} color={'secondary.main'}>*</Typography>} Book Name:</label>
                 <TextField {...register('name', { required: 'Name is required' })} error={errors.name} size="small" sx={{
@@ -136,4 +118,4 @@ const AddBook = () => {
     )
 }
 
-export default AddBook
+export default EditBook
