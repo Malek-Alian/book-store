@@ -1,12 +1,26 @@
-import { AppBar, Avatar, Box, Divider, Grid, IconButton, InputBase, Tooltip } from '@mui/material';
-import React, { useContext } from 'react';
+import { AppBar, Avatar, Box, Divider, Grid, IconButton, InputBase, Menu, MenuItem, Tooltip } from '@mui/material';
+import React, { useContext, useState } from 'react';
 import { AppContext } from '../App';
 import defaultAvatar from '../assets/defaultAvatar.svg';
 import SearchIcon from '@mui/icons-material/Search';
+import { useNavigate } from 'react-router-dom';
+import { request } from '../api/Request';
 
 const TheAppBar = () => {
 
-    const { currentUser } = useContext(AppContext)
+    const navigate = useNavigate()
+    const { setIsSigned, currentUser, setCurrentUser } = useContext(AppContext)
+    const [openMenu, setOpenMenu] = useState(false)
+
+    const signOut = async () => {
+        let result = await request('sign-out', 'POST', currentUser)
+        if (result.success) {
+            localStorage.removeItem('token')
+        }
+        setCurrentUser({})
+        setIsSigned(false)
+        navigate('/login', { replace: true })
+    }
 
     return (
         <>
@@ -25,11 +39,14 @@ const TheAppBar = () => {
                     </Grid>
                     <Grid item xs={2} display={'flex'}>
                         <Tooltip title='User Settings'>
-                            <IconButton>
+                            <IconButton onClick={() => { setOpenMenu(!openMenu) }}>
                                 <Avatar src={currentUser.profilePicture ? currentUser.profilePicture : defaultAvatar} alt='Profile Picture' />
                             </IconButton>
                         </Tooltip>
-                        <h2>{currentUser.name}</h2>
+                        <Menu sx={{ backgroundColor: 'red', width: 200 }} open={openMenu} onClose={() => { setOpenMenu(false) }}>
+                            <MenuItem onClick={() => { signOut() }}>a</MenuItem>
+                        </Menu>
+                        <h2>{currentUser.username}</h2>
                     </Grid>
                 </Grid>
             </AppBar>

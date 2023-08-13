@@ -43,7 +43,7 @@ const AddBook = () => {
             <form onSubmit={handleSubmit(addBook)} style={{ display: 'flex', flexDirection: 'column', padding: 20 }}>
                 <h4 style={{ marginTop: 0 }}>( {<Typography display={"inline"} color={'secondary.main'}>*</Typography>} ) Means the field is required</h4>
                 <label style={{ color: '#a2a4af', marginBottom: 10 }}>{<Typography display={"inline"} color={'secondary.main'}>*</Typography>} Book Name:</label>
-                <TextField {...register('name', { required: 'Name is required' })} error={errors.name} size="small" sx={{
+                <TextField {...register('name', { required: 'Name is required' })} error={errors.name && true} size="small" sx={{
                     "& .MuiOutlinedInput-root": {
                         '& fieldset': {
                             borderColor: '#ffffff1a',
@@ -67,18 +67,18 @@ const AddBook = () => {
                 }}>
                     <Select {...register('category', { required: 'Category is required', validate: value => value !== 'bookCategory' || 'Please select a valid category' })} error={errors.category} IconComponent={() => <ArrowDropDownIcon />} defaultValue={'bookCategory'}>
                         <MenuItem value={'bookCategory'} disabled>Book Category</MenuItem>
-                        <MenuItem value={'General'}>General Category</MenuItem>
-                        <MenuItem value={'History'}>History Category</MenuItem>
-                        <MenuItem value={'Horror'}>Horror Category</MenuItem>
-                        <MenuItem value={'Art'}>Art Category</MenuItem>
-                        <MenuItem value={'Film & Photography'}>Film & Photography Category</MenuItem>
-                        <MenuItem value={'Sports'}>Sports Category</MenuItem>
-                        <MenuItem value={'Computers & Internet'}>Computers & Internet Category</MenuItem>
+                        <MenuItem value={'General Category'}>General Category</MenuItem>
+                        <MenuItem value={'History Category'}>History Category</MenuItem>
+                        <MenuItem value={'Horror Category'}>Horror Category</MenuItem>
+                        <MenuItem value={'Art Category'}>Art Category</MenuItem>
+                        <MenuItem value={'Film & Photography Category'}>Film & Photography Category</MenuItem>
+                        <MenuItem value={'Sports Category'}>Sports Category</MenuItem>
+                        <MenuItem value={'Computers & Internet Category'}>Computers & Internet Category</MenuItem>
                     </Select>
                 </FormControl>
                 {errors.category && <Box marginTop={-2} marginLeft={1} color={"error.main"}><p>{errors.category.message}</p></Box>}
                 <label style={{ color: '#a2a4af', marginBottom: 10 }}>{<Typography display={"inline"} color={'secondary.main'}>*</Typography>} Book Author:</label>
-                <TextField {...register('author', { required: 'Author is required' })} error={errors.author} size="small" sx={{
+                <TextField {...register('author', { required: 'Author is required' })} error={errors.author && true} size="small" sx={{
                     "& .MuiOutlinedInput-root": {
                         '& fieldset': {
                             borderColor: '#ffffff1a',
@@ -89,7 +89,7 @@ const AddBook = () => {
                 }} />
                 {errors.author && <Box marginTop={-2} marginLeft={1} color={"error.main"}><p>{errors.author.message}</p></Box>}
                 <label style={{ color: '#a2a4af', marginBottom: 10 }}>{<Typography display={"inline"} color={'secondary.main'}>*</Typography>} Book Image:</label>
-                <TextField type="file" {...register('image', { required: 'Image is required' })} error={errors.image} size="small" sx={{
+                <TextField type="file" {...register('image', { required: 'Image is required' })} error={errors.image && true} size="small" sx={{
                     "& .MuiOutlinedInput-root": {
                         '& fieldset': {
                             borderColor: '#ffffff1a',
@@ -110,7 +110,7 @@ const AddBook = () => {
                     marginBottom: 2
                 }} />
                 <label style={{ color: '#a2a4af', marginBottom: 10 }}>{<Typography display={"inline"} color={'secondary.main'}>*</Typography>} Book Price:</label>
-                <TextField {...register('price', { required: 'Price is required' })} error={errors.price} size="small" sx={{
+                <TextField {...register('price', { required: 'Price is required' })} error={errors.price && true} size="small" sx={{
                     "& .MuiOutlinedInput-root": {
                         '& fieldset': {
                             borderColor: '#ffffff1a',

@@ -11,6 +11,7 @@ import Welcome from "./services/Welcome/Welcome";
 import AddBook from "./pages/AddBook";
 import { request } from "./api/Request";
 import EditBook from "./components/EditBook";
+import Signup from "./services/Signup/Signup";
 export const AppContext = createContext()
 
 function App() {
@@ -20,7 +21,6 @@ function App() {
   const [currentUser, setCurrentUser] = useState({})
   const [pageMenuOpen, setPageMenuOpen] = useState(true)
   const [hover, setHover] = useState(false)
-  const [books, setBooks] = useState([])
   const [sessionDialog, setSessionDialog] = useState(false)
 
   const xs = useMediaQuery('(min-width:600px)')
@@ -51,7 +51,7 @@ function App() {
   }
 
   return (
-    <AppContext.Provider value={{ xs, sm, md, lg, isSigned, setIsSigned, currentUser, setCurrentUser, pageMenuOpen, setPageMenuOpen, hover, setHover, books, setBooks }}>
+    <AppContext.Provider value={{ xs, sm, md, lg, isSigned, setIsSigned, currentUser, setCurrentUser, pageMenuOpen, setPageMenuOpen, hover, setHover }}>
       <ThemeProvider theme={Theme}>
         {sessionDialog && <Box height={'100vh'} backgroundColor={'background.default'}>
           <Dialog sx={{ textAlign: 'center' }} open={sessionDialog}>
@@ -85,6 +85,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Welcome />} />
             <Route path="/login" element={isSigned ? <Navigate to={'/home'} /> : <Login />} />
+            <Route path="/signup" element={isSigned ? <Navigate to={'/home'} /> : <Signup />} />
           </Routes>
         }
       </ThemeProvider>

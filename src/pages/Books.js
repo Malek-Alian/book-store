@@ -1,13 +1,12 @@
 import { Box, Button, Divider, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material"
-import { useContext, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { AppContext } from "../App"
 import { request } from "../api/Request"
 import Book from "../components/Book"
 
 const Books = () => {
 
-    const { books, setBooks } = useContext(AppContext)
+    const [books, setBooks] = useState([])
 
     useEffect(() => {
         const getBooks = async () => {
@@ -15,7 +14,7 @@ const Books = () => {
             setBooks(books)
         }
         getBooks()
-    }, [setBooks])
+    }, [])
 
     return (
         <Box width={'100%'} color={'white'} backgroundColor={'background.paper'} borderRadius={1}>
@@ -42,7 +41,7 @@ const Books = () => {
                 </TableHead>
                 <TableBody>
                     {books.map((book, index) => {
-                        return <Book key={index} index={index} book={book} />
+                        return <Book key={book._id} index={index} book={book} />
                     })}
                 </TableBody>
             </Table>

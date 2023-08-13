@@ -2,26 +2,23 @@ import { Box, Button, Card, TextField, Typography } from "@mui/material"
 import { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { AppContext } from "../../App"
-import { request } from "../../api/Request"
 import { useNavigate } from "react-router-dom"
+import { request } from "../../api/Request"
 
-const Login = () => {
+const Signup = () => {
 
-    const { register, handleSubmit, formState: { errors }, setError } = useForm()
-    const { setIsSigned, setCurrentUser, xs } = useContext(AppContext)
     const navigate = useNavigate()
+    const { register, handleSubmit, formState: { errors }, setError } = useForm()
+    const { xs, setIsSigned, setCurrentUser } = useContext(AppContext)
 
-    const login = async (data) => {
-        let result = await request('login', 'POST', data)
-        if (result.status === false) {
-            if (result.errorMessage) {
-                setError('email')
-                setError('password', { message: 'Email or Password is not currect' })
-            }
+    const signup = async (data) => {
+        const result = await request('add-user', 'POST', data)
+        if (result.status === 407) {
+            setError('email', { message: result.errorMessage })
         } else {
-            localStorage.setItem('token', result.token)
-            setCurrentUser(result.data)
             setIsSigned(true)
+            setCurrentUser(result.data)
+            localStorage.setItem('token', result.token)
             navigate('/home')
         }
     }
@@ -29,8 +26,18 @@ const Login = () => {
     return (
         <Box backgroundColor={'background.default'} width={'100vw'} height={'100vh'} display={"flex"} justifyContent={"center"} alignItems={"center"}>
             <Card sx={{ width: xs ? 450 : 350, height: 600, display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center' }}>
-                <h1>Login</h1>
-                <form onSubmit={handleSubmit(login)} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 13, width: '80%' }}>
+                <h1>Signup</h1>
+                <form onSubmit={handleSubmit(signup)} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 13, width: '80%' }}>
+                    <label style={{ color: errors.username && 'error.main' }}>Username</label>
+                    <TextField sx={{
+                        "& .MuiOutlinedInput-root": {
+                            '& fieldset': {
+                                borderColor: 'white',
+                            },
+                        },
+                        height: 60,
+                    }} type="text" {...register('username', { required: 'Username is required' })} error={errors.username && true} />
+                    {errors.username && <Typography color={'error.main'}>{errors.username?.message}</Typography>}
                     <label style={{ color: errors.email && 'error.main' }}>Email</label>
                     <TextField sx={{
                         "& .MuiOutlinedInput-root": {
@@ -51,15 +58,15 @@ const Login = () => {
                         height: 60
                     }} type="password" {...register('password', { required: 'Password is required' })} error={errors.password && true} />
                     {errors.password && <Typography color={'error.main'}>{errors.password?.message}</Typography>}
-                    <Button sx={{ height: 60 }} variant="contained" type="submit">Login</Button>
+                    <Button sx={{ height: 60 }} variant="contained" type="submit">Register</Button>
                 </form>
                 <Box display={"flex"}>
-                    <p>Don't have account?</p>
-                    <Button onClick={() => { navigate('/signup') }}>Register</Button>
+                    <p>Already have account?</p>
+                    <Button onClick={() => { navigate('/login') }}>Login</Button>
                 </Box>
             </Card>
         </Box>
     )
 }
 
-export default Login
+export default Signup

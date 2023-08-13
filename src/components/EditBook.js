@@ -1,13 +1,39 @@
-import { Box, Button, Divider, FormControl, MenuItem, Select, TextField, TextareaAutosize, Typography } from "@mui/material"
-import { useForm } from "react-hook-form";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { useLocation } from "react-router-dom";
+import { Box, Button, Divider, FormControl, MenuItem, Select, TextField, TextareaAutosize, Typography } from "@mui/material";
+import { useContext } from 'react';
+import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
+import { AppContext } from '../App';
+import { fileRequest, request } from '../api/Request';
 
 const EditBook = () => {
 
-    const { register, handleSubmit, formState: { errors }, reset } = useForm()
+    const navigate = useNavigate()
     const location = useLocation()
+    const { currentUser } = useContext(AppContext)
+    const { register, handleSubmit, formState: { errors }, reset } = useForm({
+        defaultValues: location.state.book
+    })
 
+    const updateBook = async (data) => {
+        if (!data.PDF) {
+            data.PDF = ' '
+        }
+        if (!data.description) {
+            data.description = ' '
+        }
+        if ((typeof data.image) !== 'string') {
+            await request(`delete-document/${location.state.book.image}`, 'DELETE')
+            let formData = new FormData();
+            formData.append("bookImage", data.image[0]);
+            const result = await fileRequest(`upload/${currentUser._id}`, 'POST', formData)
+            await request('update-book', 'PUT', { ...data, image: result.data._id })
+        } else {
+            await request('update-book', 'PUT', data)
+        }
+        reset()
+        navigate('/books', { replace: true })
+    }
     const handleFocus = (event) => {
         event.target.style.borderColor = "#0dd0b3";
         event.target.style.outline = "none";
@@ -22,10 +48,10 @@ const EditBook = () => {
                 <h2>Edit Book</h2>
             </Box>
             <Divider />
-            <form onSubmit={handleSubmit()} style={{ display: 'flex', flexDirection: 'column', padding: 20 }}>
+            <form onSubmit={handleSubmit(updateBook)} style={{ display: 'flex', flexDirection: 'column', padding: 20 }}>
                 <h4 style={{ marginTop: 0 }}>( {<Typography display={"inline"} color={'secondary.main'}>*</Typography>} ) Means the field is required</h4>
                 <label style={{ color: '#a2a4af', marginBottom: 10 }}>{<Typography display={"inline"} color={'secondary.main'}>*</Typography>} Book Name:</label>
-                <TextField {...register('name', { required: 'Name is required' })} error={errors.name} size="small" sx={{
+                <TextField {...register('name', { required: 'Name is required' })} error={errors.name && true} size="small" sx={{
                     "& .MuiOutlinedInput-root": {
                         '& fieldset': {
                             borderColor: '#ffffff1a',
@@ -47,20 +73,20 @@ const EditBook = () => {
                     },
                     marginBottom: 2,
                 }}>
-                    <Select {...register('category', { required: 'Category is required', validate: value => value !== 'bookCategory' || 'Please select a valid category' })} error={errors.category} IconComponent={() => <ArrowDropDownIcon />} defaultValue={'bookCategory'}>
+                    <Select {...register('category', { required: 'Category is required', validate: value => value !== 'bookCategory' || 'Please select a valid category' })} error={errors.category && true} IconComponent={() => <ArrowDropDownIcon />} defaultValue={location.state.book.category || 'bookCategory'}>
                         <MenuItem value={'bookCategory'} disabled>Book Category</MenuItem>
-                        <MenuItem value={'General'}>General Category</MenuItem>
-                        <MenuItem value={'History'}>History Category</MenuItem>
-                        <MenuItem value={'Horror'}>Horror Category</MenuItem>
-                        <MenuItem value={'Art'}>Art Category</MenuItem>
-                        <MenuItem value={'Film & Photography'}>Film & Photography Category</MenuItem>
-                        <MenuItem value={'Sports'}>Sports Category</MenuItem>
-                        <MenuItem value={'Computers & Internet'}>Computers & Internet Category</MenuItem>
+                        <MenuItem value={'General Category'}>General Category</MenuItem>
+                        <MenuItem value={'History Category'}>History Category</MenuItem>
+                        <MenuItem value={'Horror Category'}>Horror Category</MenuItem>
+                        <MenuItem value={'Art Category'}>Art Category</MenuItem>
+                        <MenuItem value={'Film & Photography Category'}>Film & Photography Category</MenuItem>
+                        <MenuItem value={'Sports Category'}>Sports Category</MenuItem>
+                        <MenuItem value={'Computers & Internet Category'}>Computers & Internet Category</MenuItem>
                     </Select>
                 </FormControl>
                 {errors.category && <Box marginTop={-2} marginLeft={1} color={"error.main"}><p>{errors.category.message}</p></Box>}
                 <label style={{ color: '#a2a4af', marginBottom: 10 }}>{<Typography display={"inline"} color={'secondary.main'}>*</Typography>} Book Author:</label>
-                <TextField {...register('author', { required: 'Author is required' })} error={errors.author} size="small" sx={{
+                <TextField {...register('author', { required: 'Author is required' })} error={errors.author && true} size="small" sx={{
                     "& .MuiOutlinedInput-root": {
                         '& fieldset': {
                             borderColor: '#ffffff1a',
@@ -71,7 +97,7 @@ const EditBook = () => {
                 }} />
                 {errors.author && <Box marginTop={-2} marginLeft={1} color={"error.main"}><p>{errors.author.message}</p></Box>}
                 <label style={{ color: '#a2a4af', marginBottom: 10 }}>{<Typography display={"inline"} color={'secondary.main'}>*</Typography>} Book Image:</label>
-                <TextField type="file" {...register('image', { required: 'Image is required' })} error={errors.image} size="small" sx={{
+                <TextField type="file" {...register('image')} size="small" sx={{
                     "& .MuiOutlinedInput-root": {
                         '& fieldset': {
                             borderColor: '#ffffff1a',
@@ -80,7 +106,7 @@ const EditBook = () => {
                     },
                     marginBottom: 2
                 }} />
-                {errors.image && <Box marginTop={-2} marginLeft={1} color={"error.main"}><p>{errors.image.message}</p></Box>}
+                <img src={location.state.imageURL} alt={location.state.book.name} width={200} />
                 <label style={{ color: '#a2a4af', marginBottom: 10 }}>Book PDF:</label>
                 <TextField {...register('PDF')} size="small" sx={{
                     "& .MuiOutlinedInput-root": {
@@ -92,7 +118,7 @@ const EditBook = () => {
                     marginBottom: 2
                 }} />
                 <label style={{ color: '#a2a4af', marginBottom: 10 }}>{<Typography display={"inline"} color={'secondary.main'}>*</Typography>} Book Price:</label>
-                <TextField {...register('price', { required: 'Price is required' })} error={errors.price} size="small" sx={{
+                <TextField {...register('price', { required: 'Price is required' })} error={errors.price && true} size="small" sx={{
                     "& .MuiOutlinedInput-root": {
                         '& fieldset': {
                             borderColor: '#ffffff1a',

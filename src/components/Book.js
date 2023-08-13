@@ -1,30 +1,25 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Box, IconButton, TableCell, TableRow } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
-import { downloadRequest, request } from "../api/Request";
-import { AppContext } from '../App';
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { downloadRequest, request } from "../api/Request";
 
 const Book = ({ index, book }) => {
 
     const [imageURL, setImageURL] = useState('')
-    const { books, setBooks } = useContext(AppContext)
     const navigate = useNavigate()
 
     useEffect(() => {
         const getImage = async () => {
             const result = await downloadRequest(`download/${book.image}`, 'GET', true)
             setImageURL(window.URL.createObjectURL(result))
-            const books = await request('books', 'GET')
-            setBooks(books)
         }
         getImage()
-    }, [books])
+    }, [])
 
     const deleteBook = async (id) => {
-        const result = await request(`delete-book/${id}`, 'DELETE')
-        console.log(result);
+        await request(`delete-book/${id}`, 'DELETE')
     }
 
     return (
@@ -39,7 +34,7 @@ const Book = ({ index, book }) => {
             <TableCell>{book.PDF}</TableCell>
             <TableCell>{
                 <Box width={'100%'} display={'flex'} justifyContent={'space-evenly'}>
-                    <IconButton onClick={() => { navigate('/books/edit-book', { state: { bookID: book._id } }) }} sx={{ borderRadius: 1, color: 'white', backgroundColor: 'text.secondary' }}><EditIcon /></IconButton>
+                    <IconButton onClick={() => { navigate('/books/edit-book', { state: { book, imageURL } }) }} sx={{ borderRadius: 1, color: 'white', backgroundColor: 'text.secondary' }}><EditIcon /></IconButton>
                     <IconButton onClick={() => { deleteBook(book._id) }} sx={{ borderRadius: 1, color: 'white', backgroundColor: 'text.secondary' }}><DeleteIcon /></IconButton>
                 </Box>
             }</TableCell>
