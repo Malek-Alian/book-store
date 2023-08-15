@@ -12,6 +12,7 @@ const Signup = () => {
     const { xs, setIsSigned, setCurrentUser } = useContext(AppContext)
 
     const signup = async (data) => {
+        data.role = 'user'
         const result = await request('add-user', 'POST', data)
         if (result.status === 407) {
             setError('email', { message: result.errorMessage })

@@ -26,6 +26,7 @@ const EditBook = () => {
             await request(`delete-document/${location.state.book.image}`, 'DELETE')
             let formData = new FormData();
             formData.append("bookImage", data.image[0]);
+            formData.append("folder", 'Books');
             const result = await fileRequest(`upload/${currentUser._id}`, 'POST', formData)
             await request('update-book', 'PUT', { ...data, image: result.data._id })
         } else {

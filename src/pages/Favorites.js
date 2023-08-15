@@ -1,31 +1,28 @@
 import { Box, Button, Divider, Grid } from "@mui/material"
 import { useEffect, useState } from "react"
-import { request } from "../api/Request"
 import BookCard from "../components/BookCard"
 
-const Home = () => {
+const Favorites = () => {
 
-    const [books, setBooks] = useState([])
+    const [favoriteBooks, setFavoriteBooks] = useState([])
 
     useEffect(() => {
-        const getBooks = async () => {
-            const books = await request('books', 'GET')
-            setBooks(books)
+        if (localStorage.getItem('favorites')) {
+            setFavoriteBooks(JSON.parse(localStorage.getItem('favorites')))
         }
-        getBooks()
     }, [])
 
     return (
         <Box width={'100%'} color={'white'} backgroundColor={'background.paper'}>
             <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} paddingX={3}>
-                <h2>Browse Books</h2>
-                <Button variant="contained">View All</Button>
+                <h2>Favorites</h2>
+                <Button variant="contained">Clear Favorites</Button>
             </Box>
             <Divider />
             <Grid container rowGap={4} padding={3}>
-                {books.map((book, index) => {
+                {favoriteBooks.map((book, index) => {
                     return <Grid key={index} item xs={3}>
-                        <BookCard book={book} inHome={true} />
+                        <BookCard book={book} inFavorites={true} setFavoriteBooks={setFavoriteBooks} />
                     </Grid>
                 })}
             </Grid>
@@ -33,4 +30,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default Favorites

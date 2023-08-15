@@ -1,14 +1,16 @@
 import { Box, Fade } from "@mui/material"
 import { useContext } from "react"
 import { AppContext } from "../App"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const SubMenuItem = ({ icon, title, isSelected, itemIndex, setSubSelectedIndex }) => {
 
+    const navigate = useNavigate()
     const { pageMenuOpen } = useContext(AppContext)
 
     const handleClick = () => {
         setSubSelectedIndex(itemIndex)
+        navigate(`/users`)
     }
 
     return (

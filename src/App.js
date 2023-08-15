@@ -1,22 +1,26 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Hidden, ThemeProvider, useMediaQuery } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, Grid, ThemeProvider, useMediaQuery } from "@mui/material";
 import { createContext, useEffect, useState } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
-import Home from "./pages/Home";
+import { request } from "./api/Request";
 import Menu from "./components/Menu";
 import TheAppBar from "./components/TheAppBar";
+import AddBook from "./pages/AddBook";
 import Books from "./pages/Books";
+import Cart from "./pages/Cart";
+import Favorites from "./pages/Favorites";
+import Home from "./pages/Home";
 import Login from "./services/Login/Login";
+import Signup from "./services/Signup/Signup";
 import Theme from "./services/Theme";
 import Welcome from "./services/Welcome/Welcome";
-import AddBook from "./pages/AddBook";
-import { request } from "./api/Request";
-import EditBook from "./components/EditBook";
-import Signup from "./services/Signup/Signup";
+import EditBook from "./pages/EditBook";
+import Orders from "./pages/Orders";
+import Users from "./pages/Users";
+import SubMenuItem from "./components/SubMenuItem";
 export const AppContext = createContext()
 
 function App() {
 
-  // themes, heights, radius, width, folders, 
   const [isSigned, setIsSigned] = useState(false)
   const [currentUser, setCurrentUser] = useState({})
   const [pageMenuOpen, setPageMenuOpen] = useState(true)
@@ -38,8 +42,9 @@ function App() {
         setIsSigned(true)
       } else if (result.status === 409) {
         setSessionDialog(true)
+        localStorage.removeItem('token')
       } else {
-        navigate('/login', { replace: true })
+        navigate('/', { replace: true })
       }
     }
     getUser()
@@ -77,6 +82,11 @@ function App() {
                   <Route path="/books" element={<Books />} />
                   <Route path="/books/add-book" element={<AddBook />} />
                   <Route path="/books/edit-book" element={<EditBook />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/favorites" element={<Favorites />} />
+                  <Route path="/orders" element={<Orders />} />
+                  <Route path="/users" element={<Users />} />
+                  <Route path="/submenu" element={<SubMenuItem />} />
                 </Routes>
               </Grid>
             </Grid>

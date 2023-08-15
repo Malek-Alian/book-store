@@ -15,6 +15,7 @@ const AddBook = () => {
     const addBook = async (data) => {
         let formData = new FormData();
         formData.append("bookImage", data.image[0]);
+        formData.append("folder", 'Books');
         if (!data.PDF) {
             data.PDF = ' '
         }
@@ -22,7 +23,7 @@ const AddBook = () => {
             data.description = ' '
         }
         const result = await fileRequest(`upload/${currentUser._id}`, 'POST', formData)
-        await request('books/add-book', 'POST', { ...data, image: result.data._id })
+        await request('add-book', 'POST', { ...data, image: result.data._id })
         reset()
         navigate('/books', { replace: true })
     }

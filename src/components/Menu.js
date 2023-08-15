@@ -1,11 +1,11 @@
-import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import GridViewIcon from '@mui/icons-material/GridView';
+import GroupIcon from '@mui/icons-material/Group';
 import HomeIcon from '@mui/icons-material/Home';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 import LockPersonIcon from '@mui/icons-material/LockPerson';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { Box, Fade, IconButton } from "@mui/material";
 import { useContext, useState } from "react";
 import { AppContext } from "../App";
@@ -13,24 +13,18 @@ import MenuItem from "./MenuItem";
 
 const Menu = () => {
 
-    const { pageMenuOpen, setPageMenuOpen, hover, setHover } = useContext(AppContext)
+    const { pageMenuOpen, setPageMenuOpen, hover, setHover, currentUser } = useContext(AppContext)
     const [selectedIndex, setSelectedIndex] = useState(0)
 
     const menuItems = [
-        { 'icon': <HomeIcon />, 'title': 'Shop' },
         { 'icon': <LockPersonIcon />, 'title': 'Admin' },
         { 'icon': <PersonIcon />, 'title': 'User' },
     ]
     const subMenuItems = [
         [
-            { 'icon': <HomeIcon />, 'title': 'Shop' },
-            { 'icon': <LockPersonIcon />, 'title': 'Admin' },
-            { 'icon': <PersonIcon />, 'title': 'User' },
-        ],
-        [
             { 'icon': <DashboardIcon />, 'title': 'Dashboard' },
-            { 'icon': <GridViewIcon />, 'title': 'Books Category' },
-            { 'icon': <CollectionsBookmarkIcon />, 'title': 'Author' },
+            { 'icon': <GroupIcon />, 'title': 'Users' },
+            { 'icon': <ListAltIcon />, 'title': 'Orders' },
             { 'icon': <LibraryBooksIcon />, 'title': 'Books' },
         ],
         [
@@ -65,7 +59,9 @@ const Menu = () => {
                     </Fade>}
             </Box>
             <Box marginTop={!pageMenuOpen && 3.6} color={'#b5b5be'}>
-                {menuItems.map((item, index) => <MenuItem subItems={subMenuItems[index]} isSelected={selectedIndex === index} itemIndex={index} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} key={index} icon={item.icon} title={item.title} />)}
+                {menuItems.map((item, index) =>
+                    currentUser.role === 'admin' ? index === 0 && <MenuItem subItems={subMenuItems[index]} isSelected={selectedIndex === index} itemIndex={index} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} key={index} icon={item.icon} title={item.title} />
+                        : index === 1 && <MenuItem subItems={subMenuItems[index]} isSelected={selectedIndex === index} itemIndex={index} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} key={index} icon={item.icon} title={item.title} />)}
             </Box>
         </Box>
     )

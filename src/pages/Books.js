@@ -14,7 +14,7 @@ const Books = () => {
             setBooks(books)
         }
         getBooks()
-    }, [])
+    }, [books])
 
     return (
         <Box width={'100%'} color={'white'} backgroundColor={'background.paper'} borderRadius={1}>
