@@ -6,7 +6,7 @@ import { AppContext } from "../App"
 
 const Cart = () => {
 
-    const { currentUser } = useContext(AppContext)
+    const { _1300, _1000, _700, currentUser } = useContext(AppContext)
     const [cartBooks, setCartBooks] = useState([])
     let totalPrice = 0
 
@@ -33,7 +33,7 @@ const Cart = () => {
             <Grid container rowGap={4} padding={3}>
                 {cartBooks.map((book, index) => {
                     totalPrice += book.price
-                    return <Grid key={index} item xs={3}>
+                    return <Grid key={index} item xs={_1300 ? 3 : _1000 ? 4 : _700 ? 6 : 12}>
                         <BookCard book={book} inCart={true} setCartBooks={setCartBooks} />
                     </Grid>
                 })}

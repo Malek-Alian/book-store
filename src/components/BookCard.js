@@ -1,13 +1,15 @@
 import { Box, Card, IconButton, Typography } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { downloadRequest } from "../api/Request"
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
+import { AppContext } from "../App";
 
 const BookCard = ({ book, inHome, inFavorites, inCart, setCartBooks, setFavoriteBooks }) => {
 
+    const { setCurrentTotalPrice } = useContext(AppContext)
     const [imageURL, setImageURL] = useState('')
 
     useEffect(() => {
@@ -30,6 +32,7 @@ const BookCard = ({ book, inHome, inFavorites, inCart, setCartBooks, setFavorite
             }
         })
         if (!flag) {
+            setCurrentTotalPrice(prev => prev + book.price)
             cart.push(book)
             localStorage.setItem('cart', JSON.stringify(cart))
         }
@@ -43,6 +46,7 @@ const BookCard = ({ book, inHome, inFavorites, inCart, setCartBooks, setFavorite
         })
         localStorage.setItem('cart', JSON.stringify(cart))
         setCartBooks(cart)
+        setCurrentTotalPrice(prev => prev - book.price)
     }
     const addToFavorites = () => {
         if (!localStorage.getItem('favorites')) {
@@ -73,7 +77,7 @@ const BookCard = ({ book, inHome, inFavorites, inCart, setCartBooks, setFavorite
 
     return (
         <Card elevation={0} sx={{ display: 'flex', height: 280 }} >
-            <img width={200} src={imageURL} />
+            <img width={200} src={imageURL} alt="book" />
             <Box display={"flex"} flexDirection={"column"} justifyContent={"center"} paddingLeft={2}>
                 <Typography fontSize={24} fontWeight={'bold'}>{book.name}</Typography>
                 <Typography color={'#b5b5be'} fontSize={16}>{book.author}</Typography>

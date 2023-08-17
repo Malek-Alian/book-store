@@ -1,9 +1,11 @@
 import { Box, Button, Divider, Grid } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import BookCard from "../components/BookCard"
+import { AppContext } from "../App"
 
 const Favorites = () => {
 
+    const { _1300, _1000, _700 } = useContext(AppContext)
     const [favoriteBooks, setFavoriteBooks] = useState([])
 
     useEffect(() => {
@@ -21,7 +23,7 @@ const Favorites = () => {
             <Divider />
             <Grid container rowGap={4} padding={3}>
                 {favoriteBooks.map((book, index) => {
-                    return <Grid key={index} item xs={3}>
+                    return <Grid key={index} item xs={_1300 ? 3 : _1000 ? 4 : _700 ? 6 : 12}>
                         <BookCard book={book} inFavorites={true} setFavoriteBooks={setFavoriteBooks} />
                     </Grid>
                 })}

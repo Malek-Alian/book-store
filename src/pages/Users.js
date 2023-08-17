@@ -43,7 +43,7 @@ const Users = () => {
                         <Grid item xs={2.4}>{user.email}</Grid>
                         <Grid item xs={2.4}>{user.role}</Grid>
                         <Grid item xs={2.4}>
-                            <Button onClick={() => { makeAdmin(user) }} variant="contained">Make Admin</Button>
+                            <Button disabled={user.role === 'admin'} onClick={() => { makeAdmin(user) }} variant="contained">Make Admin</Button>
                         </Grid>
                     </Grid>
                 }

@@ -10,10 +10,11 @@ import { Box, Fade, IconButton } from "@mui/material";
 import { useContext, useState } from "react";
 import { AppContext } from "../App";
 import MenuItem from "./MenuItem";
+import InterestsIcon from '@mui/icons-material/Interests';
 
-const Menu = () => {
+const SideMenu = ({ absolute }) => {
 
-    const { pageMenuOpen, setPageMenuOpen, hover, setHover, currentUser } = useContext(AppContext)
+    const { pageMenuOpen, setPageMenuOpen, hover, setHover, currentUser, lg } = useContext(AppContext)
     const [selectedIndex, setSelectedIndex] = useState(0)
 
     const menuItems = [
@@ -28,24 +29,28 @@ const Menu = () => {
             { 'icon': <LibraryBooksIcon />, 'title': 'Books' },
         ],
         [
-            { 'icon': <HomeIcon />, 'title': 'Shop' },
-            { 'icon': <LockPersonIcon />, 'title': 'Admin' },
+            { 'icon': <HomeIcon />, 'title': 'Home' },
+            { 'icon': <InterestsIcon />, 'title': 'Categories' },
             { 'icon': <PersonIcon />, 'title': 'User' },
         ]
     ]
 
     const handleMenu = () => {
-        if (hover) {
-            setPageMenuOpen(true)
-            setHover(false)
+        if (lg) {
+            if (hover) {
+                setPageMenuOpen(true)
+                setHover(false)
+            } else {
+                setPageMenuOpen(false)
+                setHover(true)
+            }
         } else {
             setPageMenuOpen(false)
-            setHover(true)
         }
     }
 
     return (
-        <Box position={"sticky"} top={0} left={0} backgroundColor={'background.paper'} onMouseOver={() => { hover && setPageMenuOpen(true) }} onMouseLeave={() => { hover && setPageMenuOpen(false) }} height={'100vh'}>
+        <Box position={absolute ? "absolute" : 'sticky'} zIndex={2} top={0} left={0} backgroundColor={'background.paper'} onMouseOver={() => { hover && setPageMenuOpen(true) }} onMouseLeave={() => { lg && hover && setPageMenuOpen(false) }} height={'100vh'}>
             <Box display={"flex"} alignItems={"center"} justifyContent={'space-between'}>
                 <Box display={"flex"} alignItems={"center"} paddingX={2} paddingTop={!pageMenuOpen && 1.6} color={'text.secondary'}>
                     <img src='https://templates.iqonic.design/booksto/html-dark/images/logo.png' alt="Logo" width={40} />
@@ -67,4 +72,4 @@ const Menu = () => {
     )
 }
 
-export default Menu
+export default SideMenu

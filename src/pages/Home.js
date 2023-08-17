@@ -1,10 +1,12 @@
 import { Box, Button, Divider, Grid } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { request } from "../api/Request"
 import BookCard from "../components/BookCard"
+import { AppContext } from "../App"
 
 const Home = () => {
 
+    const { _1300, _1000, _700 } = useContext(AppContext)
     const [books, setBooks] = useState([])
 
     useEffect(() => {
@@ -24,7 +26,7 @@ const Home = () => {
             <Divider />
             <Grid container rowGap={4} padding={3}>
                 {books.map((book, index) => {
-                    return <Grid key={index} item xs={3}>
+                    return <Grid key={index} item xs={_1300 ? 3 : _1000 ? 4 : _700 ? 6 : 12}>
                         <BookCard book={book} inHome={true} />
                     </Grid>
                 })}
