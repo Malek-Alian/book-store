@@ -13,7 +13,9 @@ const Signup = () => {
 
     const signup = async (data) => {
         data.role = 'user'
+        data.profilePicture = ' '
         const result = await request('add-user', 'POST', data)
+        console.log(result);
         if (result.status === 407) {
             setError('email', { message: result.errorMessage })
         } else {

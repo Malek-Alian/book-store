@@ -24,6 +24,7 @@ const TheAppBar = () => {
         }
         setCurrentUser({})
         setIsSigned(false)
+        setOpenMenu(false)
         navigate('/login', { replace: true })
     }
     const handleRightMenu = () => {
@@ -73,7 +74,7 @@ const TheAppBar = () => {
                                 </IconButton>
                             </Tooltip>
                             <Menu anchorEl={anchorEl} sx={{ width: 200 }} open={openMenu} onClose={() => { setOpenMenu(false) }}>
-                                <MenuItem sx={{ border: '1px solid white' }} onClick={() => { navigate('/profile') }}>Profile</MenuItem>
+                                <MenuItem sx={{ border: '1px solid white' }} onClick={() => { navigate('/profile'); setOpenMenu(false) }}>Profile</MenuItem>
                                 <MenuItem sx={{ border: '1px solid white' }} onClick={() => { signOut() }}>Sign Out</MenuItem>
                             </Menu>
                             <Box display={'flex'} flexDirection={'column'} justifyContent={'center'}>

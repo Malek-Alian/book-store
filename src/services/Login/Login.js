@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom"
 const Login = () => {
 
     const { register, handleSubmit, formState: { errors }, setError } = useForm()
-    const { setIsSigned, setCurrentUser, xs } = useContext(AppContext)
+    const { setIsSigned, setCurrentUser, xs, getUser } = useContext(AppContext)
     const navigate = useNavigate()
 
     const login = async (data) => {
@@ -22,6 +22,7 @@ const Login = () => {
             localStorage.setItem('token', result.token)
             setCurrentUser(result.data)
             setIsSigned(true)
+            getUser()
             navigate('/home')
         }
     }

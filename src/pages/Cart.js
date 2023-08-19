@@ -18,11 +18,12 @@ const Cart = () => {
 
     const makeOrder = async () => {
         const booksIds = cartBooks.map(book => book._id);
-        await request('make-order', 'POST', { createdBy: currentUser._id, books: booksIds, totalPrice })
+        await request('make-order', 'POST', { createdBy: currentUser._id, books: booksIds, totalPrice, status: 'Pending' })
         totalPrice = 0
         localStorage.removeItem('cart')
         setCartBooks([])
     }
+
     return (
         <Box width={'100%'} color={'white'} backgroundColor={'background.paper'}>
             <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} paddingX={3}>

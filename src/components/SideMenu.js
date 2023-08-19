@@ -31,7 +31,6 @@ const SideMenu = ({ absolute }) => {
         [
             { 'icon': <HomeIcon />, 'title': 'Home' },
             { 'icon': <InterestsIcon />, 'title': 'Categories' },
-            { 'icon': <PersonIcon />, 'title': 'User' },
         ]
     ]
 

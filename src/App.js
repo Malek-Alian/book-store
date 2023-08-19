@@ -20,6 +20,8 @@ import defaultAvatar from './assets/defaultAvatar.svg';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Profile from "./pages/Profile";
+import Dashboard from "./pages/Dashboard";
+import Categories from "./pages/Categories";
 
 export const AppContext = createContext()
 
@@ -46,24 +48,27 @@ function App() {
 
   const navigate = useNavigate()
 
-  useEffect(() => {
-    const getUser = async () => {
-      let result = await request('checkUser', 'POST')
-      if (result.success) {
-        const profilePicture = await downloadRequest(`download/${result.data.profilePicture}`, 'GET', true)
-        setCurrentUser({ ...result.data, profilePicture: window.URL.createObjectURL(profilePicture) })
-        setIsSigned(true)
-      } else if (result.status === 409) {
-        setSessionDialog(true)
-        localStorage.removeItem('token')
-      } else {
-        navigate('/', { replace: true })
-      }
+  const getUser = async () => {
+    let result = await request('checkUser', 'POST')
+    if (result.success) {
+      const profilePicture = await downloadRequest(`download/${result.data.profilePicture}`, 'GET', true)
+      setCurrentUser({ ...result.data, profilePicture: window.URL.createObjectURL(profilePicture) })
+      setIsSigned(true)
+    } else if (result.status === 409) {
+      setSessionDialog(true)
+      localStorage.removeItem('token')
+    } else {
+      navigate('/', { replace: true })
     }
+  }
+
+  useEffect(() => {
     getUser()
-    let cart = JSON.parse(localStorage.getItem('cart'))
-    let total = cart.reduce((sum, item) => sum + item.price, 0)
-    setCurrentTotalPrice(total)
+    if (localStorage.getItem('cart')) {
+      let cart = JSON.parse(localStorage.getItem('cart'))
+      let total = cart.reduce((sum, item) => sum + item.price, 0)
+      setCurrentTotalPrice(total)
+    }
   }, [])
 
   const goToLogin = () => {
@@ -77,11 +82,12 @@ function App() {
     }
     setCurrentUser({})
     setIsSigned(false)
+    setOpenMenu(false)
     navigate('/', { replace: true })
   }
 
   return (
-    <AppContext.Provider value={{ xxs, xs, sm, md, lg, _700, _1000, _1300, isSigned, setIsSigned, currentUser, setCurrentUser, pageMenuOpen, setPageMenuOpen, hover, setHover, setRightMenu, rightMenu, currentTotalPrice, setCurrentTotalPrice }}>
+    <AppContext.Provider value={{ xxs, xs, sm, md, lg, _700, _1000, _1300, isSigned, setIsSigned, currentUser, setCurrentUser, pageMenuOpen, setPageMenuOpen, hover, setHover, setRightMenu, rightMenu, currentTotalPrice, setCurrentTotalPrice, getUser }}>
       <ThemeProvider theme={Theme}>
         {sessionDialog && <Box height={'100vh'} backgroundColor={'background.default'}>
           <Dialog sx={{ textAlign: 'center' }} open={sessionDialog}>
@@ -117,11 +123,11 @@ function App() {
                       </Box>}
                       <Tooltip title='User Settings'>
                         <IconButton onClick={(e) => { setOpenMenu(true); setAnchorEl(e.currentTarget) }}>
-                          <Avatar sx={{ width: 55, height: 55 }} src={currentUser.profilePicture ? currentUser.profilePicture : defaultAvatar} alt='Profile Picture' />
+                          <Avatar sx={{ width: 55, height: 55 }} src={currentUser?.profilePicture ? currentUser.profilePicture : defaultAvatar} alt='Profile Picture' />
                         </IconButton>
                       </Tooltip>
                       <Menu anchorEl={anchorEl} sx={{ width: 200 }} open={openMenu} onClose={() => { setOpenMenu(false) }}>
-                        <MenuItem sx={{ border: '1px solid white' }} onClick={() => { navigate('/profile') }}>Profile</MenuItem>
+                        <MenuItem sx={{ border: '1px solid white' }} onClick={() => { navigate('/profile'); setOpenMenu(false) }}>Profile</MenuItem>
                         <MenuItem sx={{ border: '1px solid white' }} onClick={() => { signOut() }}>Sign Out</MenuItem>
                       </Menu>
                       <Box display={'flex'} flexDirection={'column'} justifyContent={'center'}>
@@ -143,6 +149,8 @@ function App() {
                   <Route path="/orders" element={<Orders />} />
                   <Route path="/users" element={<Users />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/categories" element={<Categories />} />
                 </Routes>
               </Grid>
             </Grid>
