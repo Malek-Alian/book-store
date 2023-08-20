@@ -1,19 +1,19 @@
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import MenuIcon from '@mui/icons-material/Menu';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import SearchIcon from '@mui/icons-material/Search';
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import { AppBar, Avatar, Box, Divider, Grid, IconButton, InputBase, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../App';
 import { request } from '../api/Request';
 import defaultAvatar from '../assets/defaultAvatar.svg';
-import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import MenuIcon from '@mui/icons-material/Menu';
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 
 const TheAppBar = () => {
 
     const navigate = useNavigate()
-    const { setIsSigned, currentUser, setCurrentUser, xxs, lg, _1000, rightMenu, setRightMenu, setPageMenuOpen, currentTotalPrice } = useContext(AppContext)
+    const { setIsSigned, currentUser, setCurrentUser, xxs, lg, _1000, rightMenu, setRightMenu, setPageMenuOpen, currentTotalPrice, profilePicture } = useContext(AppContext)
     const [openMenu, setOpenMenu] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
 
@@ -25,6 +25,8 @@ const TheAppBar = () => {
         setCurrentUser({})
         setIsSigned(false)
         setOpenMenu(false)
+        localStorage.setItem('expanded', JSON.stringify(true))
+        localStorage.setItem('subMenuIndex', JSON.stringify(0))
         navigate('/login', { replace: true })
     }
     const handleRightMenu = () => {
@@ -36,7 +38,7 @@ const TheAppBar = () => {
             <AppBar position="sticky" sx={{ top: 0, height: 90, backgroundColor: 'background.default', color: 'white', paddingX: 3 }}>
                 <Grid container width={'100%'} height={'100%'} alignItems={'center'}>
                     <Grid item xs={2} display={'flex'}>
-                        {lg ? <h3>Shop</h3>
+                        {lg ? <h2>{window.location.pathname.slice(1).charAt(0).toUpperCase() + window.location.pathname.slice(2)}</h2>
                             : <Box display={'flex'} alignItems={'center'} color={'text.secondary'}>
                                 <IconButton onClick={() => { setPageMenuOpen(true) }}>
                                     <MenuIcon sx={{ color: 'text.secondary' }} fontSize="large" />
@@ -70,7 +72,7 @@ const TheAppBar = () => {
                         {_1000 ? <Box display={'flex'}>
                             <Tooltip title='User Settings'>
                                 <IconButton onClick={(e) => { setOpenMenu(true); setAnchorEl(e.currentTarget) }}>
-                                    <Avatar sx={{ width: 55, height: 55 }} src={currentUser.profilePicture ? currentUser.profilePicture : defaultAvatar} alt='Profile Picture' />
+                                    <Avatar sx={{ width: 55, height: 55 }} src={profilePicture ? profilePicture : defaultAvatar} alt='Profile Picture' />
                                 </IconButton>
                             </Tooltip>
                             <Menu anchorEl={anchorEl} sx={{ width: 200 }} open={openMenu} onClose={() => { setOpenMenu(false) }}>
@@ -79,7 +81,7 @@ const TheAppBar = () => {
                             </Menu>
                             <Box display={'flex'} flexDirection={'column'} justifyContent={'center'}>
                                 <Typography fontSize={20} fontWeight={'bold'}>{currentUser.username}</Typography>
-                                <Typography color={'text.secondary'}>${currentTotalPrice}</Typography>
+                                {currentUser.role === 'user' && <Typography color={'text.secondary'}>${currentTotalPrice}</Typography>}
                             </Box>
                         </Box>
                             : <IconButton onClick={() => { handleRightMenu() }}>

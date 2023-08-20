@@ -1,7 +1,6 @@
 import { Grid } from "@mui/material"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { request } from "../api/Request"
-import { useState } from "react"
 
 const Dashboard = () => {
 
@@ -36,21 +35,21 @@ const Dashboard = () => {
 
     return (
         <Grid container color={'white'} justifyContent={'space-between'} rowGap={2} >
-            <Grid item xs={6.9} display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height={400} backgroundColor={'background.paper'} borderRadius={1}>
+            <Grid item md={6.9} xs={12} display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height={400} backgroundColor={'background.paper'} borderRadius={1}>
                 <h2>Number Of Users</h2>
                 <h2>{users}</h2>
             </Grid>
-            <Grid item xs={5} display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height={400} backgroundColor={'background.paper'} borderRadius={1}>
+            <Grid item md={5} xs={12} display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height={400} backgroundColor={'background.paper'} borderRadius={1}>
                 <h2>Number Of Orders</h2>
                 <h2>{orders}</h2>
             </Grid>
-            <Grid item xs={5.4} display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height={400} backgroundColor={'background.paper'} borderRadius={1}>
+            <Grid item md={5.4} xs={12} display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height={400} backgroundColor={'background.paper'} borderRadius={1}>
                 <h2>Number Of Books</h2>
                 <h2>{books}</h2>
             </Grid>
-            <Grid item xs={6.5} display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height={400} backgroundColor={'background.paper'} borderRadius={1}>
+            <Grid item md={6.5} xs={12} display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height={400} backgroundColor={'background.paper'} borderRadius={1}>
                 <h2>Total Income</h2>
-                <h2>{income}</h2>
+                <h2>${income}</h2>
             </Grid>
         </Grid>
     )

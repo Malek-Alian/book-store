@@ -1,5 +1,5 @@
 import { Box, Fade } from "@mui/material"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { AppContext } from "../App"
 import { useNavigate } from "react-router-dom"
 
@@ -8,8 +8,15 @@ const SubMenuItem = ({ icon, title, isSelected, itemIndex, setSubSelectedIndex }
     const navigate = useNavigate()
     const { pageMenuOpen } = useContext(AppContext)
 
+    useEffect(() => {
+        if (localStorage.getItem('subMenuIndex')) {
+            setSubSelectedIndex(JSON.parse(localStorage.getItem('subMenuIndex')))
+        }
+    }, [])
+
     const handleClick = () => {
         setSubSelectedIndex(itemIndex)
+        localStorage.setItem('subMenuIndex', JSON.stringify(itemIndex))
         navigate(`/${title.toLowerCase()}`)
     }
 

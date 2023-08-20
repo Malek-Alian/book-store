@@ -1,13 +1,14 @@
 import { Box, Button, Divider, Grid } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { request } from "../api/Request"
 import BookCard from "../components/BookCard"
+import { AppContext } from "../App"
 
 const Orders = () => {
 
     const [orders, setOrders] = useState([])
+    const { _700, _1000, _1300 } = useContext(AppContext)
 
-    console.log(orders);
     const getOrders = async () => {
         const result = await request('get-orders', 'GET')
         setOrders(result.data)
@@ -43,25 +44,30 @@ const Orders = () => {
             </Box>
             <Divider />
             {orders?.map((order, index) => {
-                return <Box key={index} padding={2}>
-                    <Box display={"flex"} justifyContent={'space-between'} alignItems={"center"}>
-                        <h2><span style={{ color: '#0dd0b3' }}>Placed By:</span> {order.createdBy.email}</h2>
-                        <h2><span style={{ color: '#0dd0b3' }}>Placed On:</span> {order.createdAt.slice(0, 10)}</h2>
-                        <h2><span style={{ color: '#0dd0b3' }}>Total Price:</span> ${order.totalPrice}</h2>
-                        <h2><span style={{ color: '#0dd0b3' }}>Status:</span> {order.status}</h2>
-                        <Box>
-                            <Button disabled={order.status === 'Accepted'} onClick={() => { acceptOrder(order) }} variant="contained">Accept</Button>
-                            <Button sx={{ marginLeft: 1, backgroundColor: 'secondary.main', '&:hover': { backgroundColor: '#fc8b78' } }} disabled={order.status === 'Rejected'} onClick={() => { rejectOrder(order) }} variant="contained">Reject</Button>
-                        </Box>
-                    </Box>
-                    <Grid container rowGap={2}>
-                        {order.books.map((book, index) => {
-                            return <Grid key={index} item xs={3}>
-                                <BookCard book={book} />
+                return <>
+                    <Box key={index} padding={2}>
+                        <Grid container display={"flex"} justifyContent={'space-between'} alignItems={"center"}>
+                            <Grid item xl={2.5} md={4}><h2><span style={{ color: '#0dd0b3' }}>Placed By:</span> {order.createdBy.email}</h2></Grid>
+                            <Grid item xl={2.5} md={4}><h2><span style={{ color: '#0dd0b3' }}>Placed On:</span> {order.createdAt.slice(0, 10)}</h2></Grid>
+                            <Grid item xl={2.5} md={4}><h2><span style={{ color: '#0dd0b3' }}>Total Price:</span> ${order.totalPrice}</h2></Grid>
+                            <Grid item xl={2.5} md={4}><h2><span style={{ color: '#0dd0b3' }}>Status:</span> {order.status}</h2></Grid>
+                            <Grid item xl={2} md={4}>
+                                <Box marginBottom={(!_700 && !_1000 && !_1300) && 2}>
+                                    <Button disabled={order.status === 'Accepted'} onClick={() => { acceptOrder(order) }} variant="contained">Accept</Button>
+                                    <Button sx={{ marginLeft: 1, backgroundColor: 'secondary.main', '&:hover': { backgroundColor: '#fc8b78' } }} disabled={order.status === 'Rejected'} onClick={() => { rejectOrder(order) }} variant="contained">Reject</Button>
+                                </Box>
                             </Grid>
-                        })}
-                    </Grid>
-                </Box>
+                        </Grid>
+                        <Grid container rowGap={2}>
+                            {order.books.map((book, index) => {
+                                return <Grid key={index} item xs={_1300 ? 3 : _1000 ? 4 : _700 ? 6 : 12} >
+                                    <BookCard book={book} />
+                                </Grid>
+                            })}
+                        </Grid>
+                    </Box>
+                    <Divider />
+                </>
             })}
         </Box>
     )

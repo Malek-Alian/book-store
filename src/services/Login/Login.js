@@ -23,7 +23,11 @@ const Login = () => {
             setCurrentUser(result.data)
             setIsSigned(true)
             getUser()
-            navigate('/home')
+            if (result.data.role === 'admin') {
+                navigate('/dashboard')
+            } else {
+                navigate('/home')
+            }
         }
     }
 

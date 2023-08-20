@@ -14,10 +14,10 @@ const Books = () => {
             setBooks(books)
         }
         getBooks()
-    }, [])
+    }, [books])
 
     return (
-        <Box width={'100%'} color={'white'} backgroundColor={'background.paper'} borderRadius={1}>
+        <Box width={'100%'} color={'white'} backgroundColor={'background.paper'} borderRadius={1} overflow={'auto'}>
             <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} paddingX={3}>
                 <h2>Books</h2>
                 <Link to={'/books/add-book'}>
@@ -25,7 +25,7 @@ const Books = () => {
                 </Link>
             </Box>
             <Divider />
-            <Table sx={{ marginTop: 2 }} border={1}>
+            <Table sx={{ marginTop: 2, width: '100%' }} border={1}>
                 <TableHead>
                     <TableRow>
                         <TableCell>No</TableCell>

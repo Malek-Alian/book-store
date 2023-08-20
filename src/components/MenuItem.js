@@ -1,23 +1,28 @@
 import { Box, Fade, Slide } from "@mui/material"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { AppContext } from "../App"
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SubMenuItem from "./SubMenuItem";
 
-const MenuItem = ({ icon, title, isSelected, itemIndex, selectedIndex, setSelectedIndex, subItems }) => {
+const MenuItem = ({ icon, title, subItems }) => {
 
     const { pageMenuOpen } = useContext(AppContext)
     const [expanded, setExpanded] = useState(false)
+    const [isSelected, setIsSelected] = useState(false)
     const [subSelectedIndex, setSubSelectedIndex] = useState(0)
 
-    const handleClick = () => {
-        if (selectedIndex === itemIndex) {
-            setExpanded(!expanded)
-        } else {
-            setExpanded(true)
+    useEffect(() => {
+        if (localStorage.getItem('expanded')) {
+            setExpanded(JSON.parse(localStorage.getItem('expanded')))
+            setIsSelected(JSON.parse(localStorage.getItem('expanded')))
         }
-        setSelectedIndex(itemIndex)
+    }, [])
+
+    const handleClick = () => {
+        setExpanded(!expanded)
+        setIsSelected(!isSelected)
+        localStorage.setItem('expanded', JSON.stringify(!expanded))
     }
 
     return (
@@ -29,7 +34,7 @@ const MenuItem = ({ icon, title, isSelected, itemIndex, selectedIndex, setSelect
                 </Box>
                 {pageMenuOpen ? expanded && isSelected ? <KeyboardArrowDownIcon sx={{ borderRight: isSelected && 3, height: 40, paddingRight: 2 }} /> : <KeyboardArrowRightIcon sx={{ borderRight: isSelected && 3, height: 40, paddingRight: 2 }} /> : ''}
             </Box>
-            {isSelected && expanded &&
+            {(isSelected && expanded) &&
                 <Slide in={expanded}>
                     <Box overflow={'hidden'}>
                         {subItems.map((item, index) => <SubMenuItem key={index} icon={item.icon} title={item.title} itemIndex={index} isSelected={subSelectedIndex === index} setSubSelectedIndex={setSubSelectedIndex} />)}

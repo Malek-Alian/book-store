@@ -38,6 +38,7 @@ function App() {
 
   const [isSigned, setIsSigned] = useState(false)
   const [currentUser, setCurrentUser] = useState({})
+  const [profilePicture, setProfilePicture] = useState('')
   const [pageMenuOpen, setPageMenuOpen] = useState(lg ? true : false)
   const [hover, setHover] = useState(false)
   const [sessionDialog, setSessionDialog] = useState(false)
@@ -52,7 +53,8 @@ function App() {
     let result = await request('checkUser', 'POST')
     if (result.success) {
       const profilePicture = await downloadRequest(`download/${result.data.profilePicture}`, 'GET', true)
-      setCurrentUser({ ...result.data, profilePicture: window.URL.createObjectURL(profilePicture) })
+      setProfilePicture(window.URL.createObjectURL(profilePicture))
+      setCurrentUser(result.data)
       setIsSigned(true)
     } else if (result.status === 409) {
       setSessionDialog(true)
@@ -64,7 +66,7 @@ function App() {
 
   useEffect(() => {
     getUser()
-    if (localStorage.getItem('cart')) {
+    if (currentUser.role === 'user' && localStorage.getItem('cart')) {
       let cart = JSON.parse(localStorage.getItem('cart'))
       let total = cart.reduce((sum, item) => sum + item.price, 0)
       setCurrentTotalPrice(total)
@@ -87,7 +89,7 @@ function App() {
   }
 
   return (
-    <AppContext.Provider value={{ xxs, xs, sm, md, lg, _700, _1000, _1300, isSigned, setIsSigned, currentUser, setCurrentUser, pageMenuOpen, setPageMenuOpen, hover, setHover, setRightMenu, rightMenu, currentTotalPrice, setCurrentTotalPrice, getUser }}>
+    <AppContext.Provider value={{ xxs, xs, sm, md, lg, _700, _1000, _1300, isSigned, setIsSigned, currentUser, setCurrentUser, pageMenuOpen, setPageMenuOpen, hover, setHover, setRightMenu, rightMenu, currentTotalPrice, setCurrentTotalPrice, getUser, profilePicture, setProfilePicture }}>
       <ThemeProvider theme={Theme}>
         {sessionDialog && <Box height={'100vh'} backgroundColor={'background.default'}>
           <Dialog sx={{ textAlign: 'center' }} open={sessionDialog}>
@@ -123,7 +125,7 @@ function App() {
                       </Box>}
                       <Tooltip title='User Settings'>
                         <IconButton onClick={(e) => { setOpenMenu(true); setAnchorEl(e.currentTarget) }}>
-                          <Avatar sx={{ width: 55, height: 55 }} src={currentUser?.profilePicture ? currentUser.profilePicture : defaultAvatar} alt='Profile Picture' />
+                          <Avatar sx={{ width: 55, height: 55 }} src={profilePicture ? profilePicture : defaultAvatar} alt='Profile Picture' />
                         </IconButton>
                       </Tooltip>
                       <Menu anchorEl={anchorEl} sx={{ width: 200 }} open={openMenu} onClose={() => { setOpenMenu(false) }}>

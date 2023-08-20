@@ -1,18 +1,17 @@
 import EditIcon from '@mui/icons-material/Edit';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Avatar, Badge, Box, Button, Grid, IconButton, TextField } from "@mui/material";
 import { useContext, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AppContext } from "../App";
 import { fileRequest, request } from "../api/Request";
 import defaultAvatar from '../assets/defaultAvatar.svg';
+import ChangePasswordDialog from '../components/ChangePasswordDialog';
 
 const Profile = () => {
 
     const [edit, setEdit] = useState(false)
-    const [passwordVisible, setPasswordVisible] = useState(false)
-    const { currentUser, setCurrentUser, getUser } = useContext(AppContext)
+    const [changePassword, setChangePassword] = useState(false)
+    const { currentUser, setCurrentUser, getUser, profilePicture } = useContext(AppContext)
     const { register, handleSubmit } = useForm({
         defaultValues: currentUser
     })
@@ -40,6 +39,9 @@ const Profile = () => {
         setCurrentUser(updatedUser)
         getUser()
     }
+    const changePasswordDialog = () => {
+        setChangePassword(true)
+    }
 
     return (
         <Box width={'100%'} color={'white'} backgroundColor={'background.paper'} display={"flex"} flexDirection={"column"} alignItems={"center"} paddingY={3}>
@@ -54,7 +56,7 @@ const Profile = () => {
                     <EditIcon fontSize='medium' sx={{ color: 'black' }} />
                 </IconButton>
             }>
-                <Avatar src={currentUser.profilePicture ? currentUser.profilePicture : defaultAvatar} sx={{ width: 150, height: 150 }} />
+                <Avatar src={profilePicture ? profilePicture : defaultAvatar} sx={{ width: 150, height: 150 }} />
             </Badge>
             <Grid container width={500} textAlign={"center"} marginY={5} rowGap={8}>
                 <Grid item xs={12} sm={6}>
@@ -72,17 +74,9 @@ const Profile = () => {
                 <Grid item xs={12} sm={6}>
                     <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
                         <h2 style={{ marginRight: 10 }}>Password:</h2>
-                        {passwordVisible ? <VisibilityOffIcon sx={{ '&:hover': { cursor: 'pointer' } }} onClick={() => { setPasswordVisible(false) }} /> : <VisibilityIcon sx={{ '&:hover': { cursor: 'pointer' } }} onClick={() => { setPasswordVisible(true) }} />}
                     </Box>
-                    {edit ? <TextField sx={{
-                        "& .MuiOutlinedInput-root": {
-                            '& fieldset': {
-                                borderColor: 'white',
-                            },
-                        },
-                        height: 60,
-                    }} type={passwordVisible ? 'text' : 'password'} {...register('password', { required: 'Password is required' })} />
-                        : <h3>{passwordVisible ? currentUser.password : '•'.repeat(currentUser.password.length)}</h3>}
+                    <Button onClick={() => { changePasswordDialog() }} variant='contained'>Change Password</Button>
+                    <ChangePasswordDialog open={changePassword} setOpen={setChangePassword} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <h2>Email:</h2>

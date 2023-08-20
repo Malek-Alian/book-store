@@ -15,7 +15,6 @@ import InterestsIcon from '@mui/icons-material/Interests';
 const SideMenu = ({ absolute }) => {
 
     const { pageMenuOpen, setPageMenuOpen, hover, setHover, currentUser, lg } = useContext(AppContext)
-    const [selectedIndex, setSelectedIndex] = useState(0)
 
     const menuItems = [
         { 'icon': <LockPersonIcon />, 'title': 'Admin' },
@@ -63,9 +62,9 @@ const SideMenu = ({ absolute }) => {
                     </Fade>}
             </Box>
             <Box marginTop={!pageMenuOpen && 3.6} color={'#b5b5be'}>
-                {menuItems.map((item, index) =>
-                    currentUser.role === 'admin' ? index === 0 && <MenuItem subItems={subMenuItems[index]} isSelected={selectedIndex === index} itemIndex={index} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} key={index} icon={item.icon} title={item.title} />
-                        : index === 1 && <MenuItem subItems={subMenuItems[index]} isSelected={selectedIndex === index} itemIndex={index} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} key={index} icon={item.icon} title={item.title} />)}
+                {currentUser.role === 'admin' ?
+                    <MenuItem subItems={subMenuItems[0]} icon={menuItems[0].icon} title={menuItems[0].title} /> :
+                    <MenuItem subItems={subMenuItems[1]} icon={menuItems[1].icon} title={menuItems[1].title} />}
             </Box>
         </Box>
     )
